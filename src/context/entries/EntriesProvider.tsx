@@ -9,29 +9,7 @@ export interface EntriesState {
 }
 
 const Entries_INITIAL_STATE: EntriesState = {
-    entries: [
-        {
-            _id: uuidv4(),
-            description:
-                'Pendiente: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel rhoncus velit. Proin placerat ante ac sapien euismod tristique. Aliquam id sapien libero. Mauris vehicula arcu et ultrices laoreet',
-            createdAt: Date.now(),
-            status: 'In-Progress',
-        },
-        {
-            _id: uuidv4(),
-            description:
-                'En Progreso: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel rhoncus velit. Proin placerat ante ac sapien euismod tristique. Aliquam id sapien libero. Mauris vehicula arcu et ultrices laoreet',
-            createdAt: Date.now() - 1000000,
-            status: 'Pending',
-        },
-        {
-            _id: uuidv4(),
-            description:
-                'Terminada: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel rhoncus velit. Proin placerat ante ac sapien euismod tristique. Aliquam id sapien libero. Mauris vehicula arcu et ultrices laoreet',
-            createdAt: Date.now() - 11000,
-            status: 'Finished',
-        },
-    ],
+    entries: [],
 };
 
 interface Props {
@@ -40,6 +18,8 @@ interface Props {
 
 export const EntriesProvider: FC<Props> = ({ children }) => {
     const [state, dispatch] = useReducer(entriesReducer, Entries_INITIAL_STATE);
+
+    // Función para agregar una nuev tarea
 
     const addNewEntry = (description: string) => {
         const newEntry: Entry = {
@@ -51,6 +31,8 @@ export const EntriesProvider: FC<Props> = ({ children }) => {
 
         dispatch({ type: '[Entry] - Add-Entry', payload: newEntry });
     };
+
+    // Función para actualizar el estado de una tarea
 
     const updatedEntry = (entry: Entry) => {
         dispatch({ type: '[Entry] - Updated-Entry', payload: entry });
