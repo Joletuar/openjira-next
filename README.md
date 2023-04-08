@@ -57,7 +57,7 @@ Renombrar el archivo __.env.template__ a __.env__ y llenar con los datos respect
 
 ## Llenar la base de datos con la información de prueba
 
-Llamar a: 
+Llamar a (solo en desarrollo): 
 ```
 http://localhost:3000/api/seed
 ```
