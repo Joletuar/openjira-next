@@ -2,7 +2,6 @@ import { FC, useReducer, useEffect } from 'react';
 import { EntriesContext, entriesReducer } from './';
 import { Entry } from '@/interfaces';
 
-// import { v4 as uuidv4 } from 'uuid';
 import { entriesApi } from '@/apis';
 import { useSnackbar } from 'notistack';
 
@@ -25,13 +24,6 @@ export const EntriesProvider: FC<Props> = ({ children }) => {
     // Función para agregar una nuev tarea
 
     const addNewEntry = async (description: string) => {
-        // const newEntry: Entry = {
-        //     _id: uuidv4(),
-        //     description,
-        //     createdAt: Date.now(),
-        //     status: 'Pending',
-        // };
-
         // Hacemos la request hacia el endpoint para insertar una nueva entry
 
         const { data } = await entriesApi.post<Entry>('/entries', {
