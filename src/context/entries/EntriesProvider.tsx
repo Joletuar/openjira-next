@@ -4,6 +4,7 @@ import { Entry } from '@/interfaces';
 
 // import { v4 as uuidv4 } from 'uuid';
 import { entriesApi } from '@/apis';
+import { useSnackbar } from 'notistack';
 
 export interface EntriesState {
     entries: Entry[];
@@ -19,6 +20,7 @@ const Entries_INITIAL_STATE: EntriesState = {
 
 export const EntriesProvider: FC<Props> = ({ children }) => {
     const [state, dispatch] = useReducer(entriesReducer, Entries_INITIAL_STATE);
+    const { enqueueSnackbar } = useSnackbar();
 
     // Función para agregar una nuev tarea
 
@@ -41,7 +43,10 @@ export const EntriesProvider: FC<Props> = ({ children }) => {
 
     // Función para actualizar el estado de una tarea
 
-    const updatedEntry = async ({ _id, description, status }: Entry) => {
+    const updatedEntry = async (
+        { _id, description, status }: Entry,
+        showSnackbar: boolean = false
+    ) => {
         // Usamos un try-catch, porque si la respuesta es 400 o 500 axios lanza una excepción
 
         try {
@@ -53,6 +58,19 @@ export const EntriesProvider: FC<Props> = ({ children }) => {
             });
 
             dispatch({ type: '[Entry] - Updated-Entry', payload: data });
+
+            // TODO: mostrar snackbar
+
+            if (showSnackbar) {
+                enqueueSnackbar('Entrada actualizada', {
+                    variant: 'success',
+                    autoHideDuration: 1500,
+                    anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'right',
+                    },
+                });
+            }
         } catch (error: any) {
             console.log(error.response.data.message);
         }
