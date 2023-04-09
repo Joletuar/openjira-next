@@ -44,7 +44,7 @@ const EntryPage: FC<Props> = ({ entry }) => {
         [inputValue, touched]
     );
 
-    const { updatedEntry } = useContext(EntriesContext);
+    const { updatedEntry, deleteEntry } = useContext(EntriesContext);
 
     const onChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
@@ -68,6 +68,13 @@ const EntryPage: FC<Props> = ({ entry }) => {
         updatedEntry(updateEntry, true);
 
         router.push('/');
+    };
+
+    const onDelete = (id: string) => {
+        if (!confirm('Está seguro de eliminar')) return;
+
+        deleteEntry(id, true);
+        router.replace('/');
     };
 
     return (
@@ -141,6 +148,7 @@ const EntryPage: FC<Props> = ({ entry }) => {
                 </Grid>
 
                 <IconButton
+                    onClick={() => onDelete(entry._id)}
                     color='error'
                     sx={{
                         position: 'fixed',

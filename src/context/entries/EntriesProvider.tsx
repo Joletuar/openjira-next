@@ -79,6 +79,33 @@ export const EntriesProvider: FC<Props> = ({ children }) => {
         dispatch({ type: '[Entry] - Load-Entries', payload: entriesList });
     };
 
+    // Función encargada de eliminar una entry en la bd
+
+    const deleteEntry = async (_id: string, showSnackbar: boolean = false) => {
+        // Realizamos la operación de eliminar
+
+        try {
+            const entryDeleted = await entriesApi.delete<Entry>(
+                `/entries/${_id}`
+            );
+
+            dispatch({ type: '[Entry] - Delete-Entry', payload: _id });
+
+            if (showSnackbar) {
+                enqueueSnackbar('Entrada Eliminada', {
+                    variant: 'success',
+                    autoHideDuration: 1500,
+                    anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'right',
+                    },
+                });
+            }
+        } catch (error: any) {
+            console.log(error.response.data.message);
+        }
+    };
+
     useEffect(() => {
         refreshEntries();
     }, []);
@@ -91,6 +118,7 @@ export const EntriesProvider: FC<Props> = ({ children }) => {
                 // Methods
                 addNewEntry,
                 updatedEntry,
+                deleteEntry,
             }}
         >
             {children}

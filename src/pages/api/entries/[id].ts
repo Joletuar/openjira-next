@@ -29,7 +29,7 @@ export default function handler(
         case 'GET':
             return getEntry(req, res);
         case 'DELETE':
-            return;
+            return deleteEntry(req, res);
         default:
             return res.status(400).json({
                 message: 'Endpoint doesnt exist!',
@@ -124,6 +124,50 @@ const getEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         await db.disconnect();
 
         res.status(200).json(entryFound!);
+    } catch (error) {
+        console.log(error);
+        await db.disconnect();
+
+        res.status(500).json({
+            message: 'Algo salio mal, revisar los logs del servidor',
+        });
+    }
+};
+
+// Función para eliminar un entrada de la bd
+
+const deleteEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+    const { id } = req.query;
+
+    try {
+        await db.connect();
+
+        const entryFound = await Entry.findById(id);
+
+        if (!entryFound) {
+            await db.disconnect();
+            return res.status(404).json({
+                message: 'The entry doesnt exists!',
+            });
+        }
+
+        try {
+            const entryDeleted = await Entry.findByIdAndRemove(entryFound._id);
+
+            await db.disconnect();
+
+            res.status(200).json(entryDeleted!);
+        } catch (error: any) {
+            console.log(error);
+            await db.disconnect();
+
+            // Retornamos el error del validator que definimos en el esquema
+            res.status(400).json({
+                message: `Algo salio mal al realizar la eliminación --> ${error.errors.status.message}`,
+            });
+        }
+
+        await db.disconnect();
     } catch (error) {
         console.log(error);
         await db.disconnect();
