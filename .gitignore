@@ -40,3 +40,4 @@ mongo/
 
 # variables de entorno
 .env
+.env.production
