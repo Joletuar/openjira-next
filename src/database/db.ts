@@ -14,36 +14,24 @@ const mongoConnection = {
 // Establecer la conexión a la base
 
 export const connect = async () => {
+  mongoose.set('strictQuery', true);
+
   if (mongoConnection.isConnected) {
-    console.log('----->', 'Ya estabamos conectados');
-    return;
-  }
-
-  if (mongoose.connections.length > 0) {
-    // Si existen más conexiones vamos a tomar la primera y su estado
-    mongoConnection.isConnected = mongoose.connections[0].readyState;
-
-    // Si ya tenemos una conexión y es === 1, usamos dicha conexión
-    if (mongoConnection.isConnected === 1) {
-      console.log('----->', 'Usando conexión anterior');
-      return;
-    }
-
-    // Si ya tenemos conexión, pero no estamos conectados, la cerramos para no tener conexiones simultaneas
-
-    await mongoose.disconnect();
+    return console.log('----->', 'Ya estabamos conectados');
   }
 
   // Realizamos la conexión
-
-  await mongoose.connect(`${process.env.MONGO_URL}` || '');
-  mongoConnection.isConnected = 1;
-
-  console.log(
-    '----->',
-    'Conectado a MongoDB',
-    `${process.env.MONGO_URL}` || ''
-  );
+  try {
+    await mongoose.connect(`${process.env.MONGO_URL}` || '');
+    mongoConnection.isConnected = 1;
+    console.log(
+      '----->',
+      'Conectado a MongoDB',
+      `${process.env.MONGO_URL}` || ''
+    );
+  } catch (error) {
+    console.log('Error al conectarse a MongoDB', error);
+  }
 };
 
 export const disconnect = async () => {
