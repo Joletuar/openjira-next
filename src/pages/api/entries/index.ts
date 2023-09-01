@@ -46,11 +46,12 @@ const postEntries = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   // Solamente obtenemos los campos que nos interesan
   const { description = '' } = req.body;
 
-  // Creamos una nueva entrada a partir del modelo que ya definimos
-  const newEntry = new Entry({ description, createdAt: Date.now() });
-
   try {
     await db.connect();
+
+    // Creamos una nueva entrada a partir del modelo que ya definimos
+    const newEntry = new Entry({ description, createdAt: Date.now() });
+
     await newEntry.save();
 
     res.status(201).json(newEntry);
